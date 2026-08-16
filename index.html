@@ -2,25 +2,25 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Uma pergunta para você...</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #1a0b2e; /* Roxo escuro retrô */
+            background-color: #1a0b2e;
             color: #fff;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 100vh; /* Usa a altura total da tela */
+            height: 100dvh; /* Ajuste para a barra do navegador no celular */
             overflow: hidden;
             font-family: 'VT323', monospace;
         }
 
-        /* Efeito de "estrelas" no fundo */
         .stars {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -38,9 +38,8 @@
             max-width: 600px;
         }
 
-        /* Fonte da máquina de escrever */
         #typewriter-text {
-            font-size: 28px;
+            font-size: 26px;
             min-height: 150px;
             color: #ff79c6;
             text-shadow: 2px 2px 0px #000;
@@ -48,11 +47,10 @@
             line-height: 1.4;
         }
 
-        /* Cursor piscando */
         .cursor {
             display: inline-block;
-            width: 10px;
-            height: 24px;
+            width: 8px;
+            height: 22px;
             background-color: #ff79c6;
             animation: blink 0.8s infinite;
             vertical-align: middle;
@@ -63,7 +61,6 @@
             51%, 100% { opacity: 0; }
         }
 
-        /* Área da pergunta final (inicialmente escondida) */
         #question-area {
             display: none;
             flex-direction: column;
@@ -73,7 +70,7 @@
 
         #final-question {
             font-family: 'Press Start 2P', cursive;
-            font-size: 24px;
+            font-size: 20px;
             color: #50fa7b;
             text-shadow: 3px 3px 0px #000;
             margin-bottom: 40px;
@@ -84,22 +81,22 @@
             display: flex;
             gap: 40px;
             position: relative;
-            height: 60px; /* Altura pra evitar que a tela pule quando o botão fugir */
+            height: 60px;
             justify-content: center;
             align-items: center;
             width: 100%;
         }
 
-        /* Estilo dos botões 16-bit */
         button {
             font-family: 'Press Start 2P', cursive;
-            font-size: 16px;
-            padding: 15px 30px;
+            font-size: 14px;
+            padding: 15px 25px;
             border: 4px solid #000;
             cursor: pointer;
             color: #fff;
             box-shadow: 4px 4px 0px #000;
             transition: transform 0.1s;
+            -webkit-tap-highlight-color: transparent; /* Remove o flash azul no toque do celular */
         }
 
         button:active {
@@ -114,10 +111,9 @@
 
         #btn-no {
             background-color: #ff5555;
-            position: absolute; /* Necessário para o botão fugir */
+            position: absolute;
         }
 
-        /* Pop-up final */
         #popup {
             display: none;
             position: fixed;
@@ -126,25 +122,36 @@
             transform: translate(-50%, -50%);
             background-color: #282a36;
             border: 6px solid #50fa7b;
-            padding: 40px;
+            padding: 30px;
             text-align: center;
             z-index: 10;
             box-shadow: 0 0 0 9999px rgba(0,0,0,0.8);
             animation: popIn 0.5s ease;
+            width: 80%;
+            max-width: 400px;
         }
 
         #popup h2 {
             font-family: 'Press Start 2P', cursive;
             color: #50fa7b;
             margin-bottom: 20px;
-            font-size: 20px;
+            font-size: 18px;
             text-shadow: 2px 2px 0 #000;
         }
 
         #popup p {
             font-family: 'VT323', monospace;
-            font-size: 24px;
+            font-size: 22px;
             color: #fff;
+        }
+
+        /* Ajustes de tamanho para telas pequenas (Celulares) */
+        @media (max-width: 600px) {
+            #typewriter-text { font-size: 22px; }
+            #final-question { font-size: 16px; }
+            button { font-size: 12px; padding: 12px 20px; }
+            #popup h2 { font-size: 14px; }
+            #popup p { font-size: 18px; }
         }
 
         @keyframes popIn {
@@ -163,10 +170,8 @@
     <div class="stars"></div>
 
     <div class="container">
-        <!-- Texto dos elogios -->
         <div id="typewriter-text"><span id="text"></span><span class="cursor"></span></div>
 
-        <!-- Pergunta final e Botões -->
         <div id="question-area">
             <h1 id="final-question">Aceita sair comigo?</h1>
             <div class="buttons">
@@ -176,7 +181,6 @@
         </div>
     </div>
 
-    <!-- Janela de Sucesso -->
     <div id="popup">
         <h2>COMBINADO! 🥳❤️</h2>
         <p>Mal posso esperar pelo nosso encontro.<br>Prometo ser incrível!</p>
@@ -189,7 +193,6 @@
         const btnYes = document.getElementById('btn-yes');
         const popup = document.getElementById('popup');
 
-        // Lista de elogios
         const messages = [
             "Oi... eu estava pensando em algumas coisas...",
             "Sobre como o seu sorriso ilumina qualquer dia nublado.",
@@ -203,7 +206,6 @@
         let charIndex = 0;
         let isDeleting = false;
 
-        // Função da máquina de escrever
         function typeWriter() {
             const currentMsg = messages[msgIndex];
             
@@ -212,16 +214,15 @@
                 charIndex++;
                 
                 if (charIndex === currentMsg.length) {
-                    // Pausa no final da frase
                     if (msgIndex === messages.length - 1) {
                         setTimeout(showQuestion, 1500);
                         return;
                     }
                     isDeleting = true;
-                    setTimeout(typeWriter, 2000); // Tempo para ler antes de apagar
+                    setTimeout(typeWriter, 2000);
                     return;
                 }
-                setTimeout(typeWriter, 60); // Velocidade de digitação
+                setTimeout(typeWriter, 60);
             } else {
                 textElement.innerHTML = currentMsg.substring(0, charIndex - 1);
                 charIndex--;
@@ -232,44 +233,53 @@
                     setTimeout(typeWriter, 500);
                     return;
                 }
-                setTimeout(typeWriter, 30); // Velocidade de apagar
+                setTimeout(typeWriter, 30);
             }
         }
 
-        // Revela a pergunta final
         function showQuestion() {
             document.getElementById('typewriter-text').style.display = 'none';
             questionArea.style.display = 'flex';
         }
 
-        // Faz o botão NÃO fugir
-        btnNo.addEventListener('mouseover', moveButton);
-        btnNo.addEventListener('click', moveButton); // Caso ela consiga clicar no exato momento
+        // --- A MÁGICA DA FUGA NO CELULAR E PC ---
+        function moveButton(event) {
+            // 'event' existe no toque/click. preventDefault() impede que o clique seja registrado no celular!
+            if (event && event.preventDefault) {
+                event.preventDefault();
+            }
 
-        function moveButton() {
-            // Gera posições aleatórias dentro da tela
-            const x = Math.random() * (window.innerWidth - btnNo.offsetWidth - 100);
-            const y = Math.random() * (window.innerHeight - btnNo.offsetHeight - 100);
+            // Pegando as dimensões reais da tela do dispositivo
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            // Calculando uma posição aleatória, garantindo que o botão não saia da tela
+            const x = Math.random() * (screenWidth - btnNo.offsetWidth - 20);
+            const y = Math.random() * (screenHeight - btnNo.offsetHeight - 20);
             
-            // Posiciona o botão de forma absoluta na tela
             btnNo.style.position = 'fixed';
             btnNo.style.left = `${x}px`;
             btnNo.style.top = `${y}px`;
 
-            // Textos engraçados para o botão que foge
             const funnyTexts = ["NÃO", "Tenta de novo!", "Fui!", "Não consegue né?", "Catch me!", "Ainda não..."];
             btnNo.innerText = funnyTexts[Math.floor(Math.random() * funnyTexts.length)];
         }
 
+        // Eventos para PC (Mouse)
+        btnNo.addEventListener('mouseover', moveButton);
+        btnNo.addEventListener('click', moveButton);
+
+        // Evento para Celular (Touch) - touchstart dispara ao tocar na tela
+        btnNo.addEventListener('touchstart', moveButton, { passive: false });
+
         // Ação do botão SIM
         btnYes.addEventListener('click', () => {
             popup.style.display = 'block';
-            // Toca um som de "level up" mental (visual)
             btnNo.style.display = 'none';
             btnYes.innerText = "YAY!";
         });
 
-        // Inicia a animação ao carregar a página
+        // Inicia
         setTimeout(typeWriter, 1000);
 
     </script>
